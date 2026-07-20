@@ -61,7 +61,18 @@ lista completa de regras e categorias.
 
 ## Prompts do projeto
 
-Prompts utilizados para construir este projeto com Claude Design + Claude Code, na ordem de execução. Anatomia comum: **contexto** (onde buscar a verdade) + **restrição** (o que não fazer) + **critério de aceite** (como saber que terminou).
+Prompts utilizados para construir este projeto com Claude Design + Claude Code, agrupados em duas
+fases — todo o trabalho de prototipagem no Claude Design primeiro, depois toda a geração de código
+no Claude Code — na ordem de execução dentro de cada fase. Anatomia comum: **contexto** (onde
+buscar a verdade) + **restrição** (o que não fazer) + **critério de aceite** (como saber que
+terminou).
+
+Os prompts 2 e 16–21 (tela Home) foram reconstituídos a partir de `docs/spec-home.md` e
+`design/design-system.md` — o histórico de git deste repositório está em commit único (sem o texto
+literal das mensagens originais), então o texto exato desses prompts é uma reconstrução fiel às
+decisões já registradas nesses documentos, não uma cópia literal do prompt original.
+
+### Fase 1 — Claude Design (prototipagem e configuração visual)
 
 ### 1. Design system — formulário "Set up your design system" (Claude Design)
 
@@ -84,9 +95,65 @@ hover/disabled), Card e Badge. Tom acolhedor e artesanal, não
 genérico de template.
 ```
 
-Após configurar: copiar a instrução de import com **Share > Copy prompt** no nível do projeto (sem tela selecionada) — ela alimenta o prompt 4.
+Após configurar: copiar a instrução de import com **Share > Copy prompt** no nível do projeto (sem tela selecionada) — ela alimenta o prompt 7.
 
-### 2. Scaffolding do projeto (Claude Code)
+### 2. Protótipo — tela Home/landing (Claude Design)
+
+Gera a landing no mesmo projeto do design system, logo após a configuração inicial — antes do
+Cardápio, já que a Home é a porta de entrada do site. Reaproveita o design system recém-configurado
+(tokens e componentes), sem inventar estilos novos.
+
+```
+Usando o mesmo design system do projeto (tokens e componentes, sem
+inventar cores ou estilos novos), crie a tela Home/landing:
+
+header compacto com wordmark + nav (links "Como funciona" e
+"Favoritas da casa" + botão "Pedir agora"); hero com badge "Forno
+aceso hoje até as 23h", título "Pizza artesanal, feita como em
+casa", parágrafo, botão "Ver o cardápio" e aviso de frete grátis
+acima de R$100, com foto de pizza ao lado; seção "Como funciona"
+com 3 passos em cards numerados; seção "Favoritas da casa" com 3
+cards de pizza (foto, nome, ingredientes, preço "A partir de");
+CTA final "Bateu a fome?" com botão "Montar meu pedido"; footer
+com endereço e horário de funcionamento.
+```
+
+Após gerar: **com a tela selecionada**, Share > Copy prompt (a instrução virá com `?file=Home.dc.html`).
+
+### 3. Protótipo — listagem das pizzas (Claude Design)
+
+Gera a primeira funcionalidade da tela de Cardápio usando exclusivamente o design system configurado. Os preços são os mesmos da spec (prompt 10) — sem eles, o protótipo inventaria valores divergentes da implementação.
+
+```
+Usando o design system configurado do projeto (tokens e componentes,
+sem inventar cores ou estilos novos), crie a tela de cardápio —
+por enquanto SÓ a listagem das pizzas, sem carrinho:
+
+header com logo textual; grade com 3 cards de pizza (Margherita,
+Calabresa, Quatro Queijos) — cada card com nome, ingredientes, emoji
+grande de pizza no lugar de foto, seletor de tamanho P/M/G com o
+preço ao lado de cada tamanho (base P R$35 / M R$45 / G R$55, com
+acréscimo por sabor: Margherita +R$0, Calabresa +R$5, Quatro
+Queijos +R$10), e botão "Adicionar".
+```
+
+### 4. Protótipo — montagem do pedido (Claude Design)
+
+Adiciona a segunda funcionalidade sobre a primeira, tratando-as como incrementos separados desde o design. O "mantenha a listagem exatamente como está" protege o incremento anterior.
+
+```
+Agora adicione à tela a funcionalidade de montagem do pedido:
+carrinho lateral fixo com os itens adicionados (sabor + tamanho),
+subtotal, frete e total. No carrinho, aviso "Faltam R$ X para
+frete grátis" (frete grátis ≥ R$100). Mantenha a listagem
+exatamente como está.
+```
+
+Após gerar: **com a tela selecionada**, Share > Copy prompt (a instrução virá com `?file=NomeDaTela.dc.html`) e salvar um screenshot do protótipo como `design/referencia.png`.
+
+### Fase 2 — Claude Code (scaffolding, import, specs, TDD, implementação, validação)
+
+### 5. Scaffolding do projeto (Claude Code)
 
 Cria a base: Vite + React + TypeScript com Vitest/Testing Library, estrutura de pastas e suíte verde. Rodar com a pasta `pizzaria-dona-massa` vazia aberta no VS Code.
 
@@ -104,7 +171,7 @@ e remova os CSS de exemplo. Ao final, rode npm test na raiz e me
 mostre a suíte verde.
 ```
 
-### 3. Constituição do projeto — CLAUDE.md (Claude Code)
+### 6. Constituição do projeto — CLAUDE.md (Claude Code)
 
 Cria o arquivo de contexto carregado no início de toda sessão do Claude Code. As regras valem para todas as sessões sem precisarem ser repetidas nos prompts.
 
@@ -129,7 +196,7 @@ Cria o arquivo de contexto carregado no início de toda sessão do Claude Code. 
    design/design-system.md).
 ```
 
-### 4. Import do design system para o projeto (Claude Code)
+### 7. Import do design system para o projeto (Claude Code)
 
 Traz o design system do Claude Design para dentro do código: tokens, componentes base e o registro de origem. Pré-requisito: MCP autenticado com `/design-login`. O direcionamento não repete valores de design — só define onde as coisas moram e veta telas; o sistema importado é a única fonte de verdade.
 
@@ -150,9 +217,9 @@ Rode npm test ao final.
 [COLAR AQUI A INSTRUÇÃO COPIADA NO PROMPT 1]
 ```
 
-### 5. Sensor visual — script de screenshot (Claude Code)
+### 8. Sensor visual — script de screenshot (Claude Code)
 
-Dá "olhos" ao fluxo: um script que captura a página rodando para o loop de validação de fidelidade visual (prompt 13). Testes validam comportamento; screenshot valida fidelidade ao design.
+Dá "olhos" ao fluxo: um script que captura a página rodando para o loop de validação de fidelidade visual (prompts 15 e 21). Testes validam comportamento; screenshot valida fidelidade ao design.
 
 ```
 > adicione ao projeto a capacidade de capturar um screenshot da
@@ -163,38 +230,7 @@ Critério de aceite: rodar npm run screenshot e o arquivo
 design/atual.png mostrar o placeholder atual.
 ```
 
-### 6. Protótipo — listagem das pizzas (Claude Design)
-
-Gera a primeira funcionalidade da tela usando exclusivamente o design system configurado. Os preços são os mesmos da spec (prompt 9) — sem eles, o protótipo inventaria valores divergentes da implementação.
-
-```
-Usando o design system configurado do projeto (tokens e componentes,
-sem inventar cores ou estilos novos), crie a tela de cardápio —
-por enquanto SÓ a listagem das pizzas, sem carrinho:
-
-header com logo textual; grade com 3 cards de pizza (Margherita,
-Calabresa, Quatro Queijos) — cada card com nome, ingredientes, emoji
-grande de pizza no lugar de foto, seletor de tamanho P/M/G com o
-preço ao lado de cada tamanho (base P R$35 / M R$45 / G R$55, com
-acréscimo por sabor: Margherita +R$0, Calabresa +R$5, Quatro
-Queijos +R$10), e botão "Adicionar".
-```
-
-### 7. Protótipo — montagem do pedido (Claude Design)
-
-Adiciona a segunda funcionalidade sobre a primeira, tratando-as como incrementos separados desde o design. O "mantenha a listagem exatamente como está" protege o incremento anterior.
-
-```
-Agora adicione à tela a funcionalidade de montagem do pedido:
-carrinho lateral fixo com os itens adicionados (sabor + tamanho),
-subtotal, frete e total. No carrinho, aviso "Faltam R$ X para
-frete grátis" (frete grátis ≥ R$100). Mantenha a listagem
-exatamente como está.
-```
-
-Após gerar: **com a tela selecionada**, Share > Copy prompt (a instrução virá com `?file=NomeDaTela.dc.html`) e salvar um screenshot do protótipo como `design/referencia.png`.
-
-### 8. Guardar o contrato visual (Claude Code)
+### 9. Guardar o contrato visual — Cardápio (Claude Code)
 
 Persiste a instrução de import da tela sem executá-la — a implementação só acontece depois da spec e dos testes. A instrução copiada oferece o atalho de implementar direto; este prompt deliberadamente o adia.
 
@@ -207,7 +243,7 @@ implementação virá depois da spec e dos testes:
 [COLAR AQUI A INSTRUÇÃO COPIADA]
 ```
 
-### 9. Spec no modo plano (Claude Code — ativar modo de planejamento com Shift+Tab)
+### 10. Spec no modo plano — Cardápio (Claude Code — ativar modo de planejamento com Shift+Tab)
 
 Transforma design + regras de negócio em especificação aprovada antes de qualquer código. O design diz "como parece"; a spec adiciona o que ele não sabe: regras de negócio e arquitetura. Na revisão, conferir o caso de borda: subtotal exatamente R$100 (frete grátis).
 
@@ -234,7 +270,7 @@ Com o plano aprovado:
 > salve o plano aprovado em docs/spec-cardapio.md.
 ```
 
-### 10. TDD — vermelho primeiro (Claude Code)
+### 11. TDD — vermelho primeiro (Claude Code)
 
 Escreve os testes do domínio antes de qualquer implementação. O "me mostre a suíte FALHANDO" força o vermelho como evidência de que os testes testam algo. Revisar os casos antes de aprovar: os testes são a régua.
 
@@ -247,7 +283,7 @@ Funcionalidade 2 (pedido): subtotal do carrinho, frete grátis
 Rode e me mostre a suíte FALHANDO antes de implementar.
 ```
 
-### 11. TDD — verde (Claude Code)
+### 12. TDD — verde (Claude Code)
 
 Implementa o domínio até a suíte passar. Depois, rodar `npm test` manualmente — confie, mas verifique na fonte.
 
@@ -255,7 +291,7 @@ Implementa o domínio até a suíte passar. Depois, rodar `npm test` manualmente
 > testes aprovados. Implemente o domínio até a suíte ficar verde.
 ```
 
-### 12. Implementação — Funcionalidade 1: listagem (Claude Code)
+### 13. Implementação — Funcionalidade 1: listagem (Claude Code)
 
 Implementa a listagem buscando o design via MCP e compondo com a fundação já importada. O critério de aceite é duplo de propósito: testes de componente passam mesmo sem a página montada — só a verificação no navegador garante a entrega completa.
 
@@ -271,7 +307,7 @@ pela tela da listagem. Critério de aceite: npm test verde E npm run
 dev mostrando o cardápio no navegador.
 ```
 
-### 13. Implementação — Funcionalidade 2: montagem do pedido (Claude Code)
+### 14. Implementação — Funcionalidade 2: montagem do pedido (Claude Code)
 
 Adiciona o carrinho integrado à página existente, sem alterar o incremento anterior, com teste de componente do fluxo.
 
@@ -288,7 +324,7 @@ frete. Critério de aceite: npm test verde E o fluxo completo
 funcionando no npm run dev.
 ```
 
-### 14. Validação de fidelidade visual (Claude Code)
+### 15. Validação de fidelidade visual — Cardápio (Claude Code)
 
 Loop de correção com sensor: screenshot → comparação com o design → ajuste → repete. Pixel-perfect não é a meta; fidelidade de tokens e layout é.
 
@@ -300,6 +336,103 @@ layout de header, cards e carrinho. Liste as divergências
 encontradas e corrija uma a uma. Repita screenshot + comparação até
 a implementação ficar fiel ao design. Ao final: npm test verde e o
 antes/depois das correções.
+```
+
+### 16. Guardar o novo contrato visual — Home (Claude Code)
+
+Acrescenta a instrução de import do Home à mesma origem de verdade do Cardápio, sem executá-la
+ainda — mesmo adiamento deliberado do prompt 9.
+
+```
+> Vou te passar a instrução de import do Home.dc.html gerada pelo
+Claude Design (ela manda implementar a tela — NÃO faça isso agora).
+Apenas acrescente o conteúdo abaixo a design/design-prompt.md,
+junto da instrução do Cardápio já salva; a implementação virá
+depois da spec:
+
+[COLAR AQUI A INSTRUÇÃO COPIADA]
+```
+
+### 17. Brainstorming — decisões de arquitetura da Home (Claude Code)
+
+Antes de planejar, alinha com o usuário as decisões que a spec não deriva sozinha do `.dc.html`:
+como navegar entre 2 telas sem router, como reproduzir o botão vermelho-sobre-vermelho do Home sem
+componente novo, e como o script de screenshot passa a cobrir as duas telas.
+
+```
+> antes de planejar a implementação da Home, quero alinhar as
+decisões de arquitetura: como navegar entre Home e Cardápio sem
+adicionar um router só para 2 telas, como reproduzir o botão
+vermelho-sobre-vermelho do Home reaproveitando o Button existente
+(sem criar componente novo), e como scripts/screenshot.mjs deve
+cobrir as duas telas num só comando.
+```
+
+### 18. Spec no modo plano — Home (Claude Code — modo de planejamento)
+
+Transforma o design da Home + as decisões da conversa de brainstorming em especificação aprovada,
+igual ao prompt 10 fez para o Cardápio. `Favoritas.tsx` reaproveita `PIZZAS`, `precoPorTamanho` e
+`formatarPreco` de `src/domain/cardapio.ts` — já existentes e testados desde os prompts 12–13.
+
+```
+> planeje a implementação da tela Home (landing) conforme
+design/design-prompt.md (Home.dc.html) e as decisões de arquitetura
+já alinhadas: navegação por estado local em App.tsx (useState,
+sem router), nova variant onPrimary no Button, "Favoritas da casa"
+reaproveitando PIZZAS/precoPorTamanho/formatarPreco do domínio já
+existente (nenhuma regra de negócio nova) e responsividade com
+breakpoint ~860px empilhando o hero e os grids de 3 colunas. Liste
+os componentes e os casos de teste por componente. NÃO escreva
+código.
+```
+
+Com o plano aprovado:
+```
+> salve o plano aprovado em docs/spec-home.md.
+```
+
+### 19. TDD por componente — Home (Claude Code)
+
+Como a Home não introduz regra de negócio nova, o TDD é por componente (teste → implementação
+mínima), não por função de domínio como nos prompts 11–12.
+
+```
+> TDD conforme docs/spec-home.md: para cada componente (HomeHeader,
+HomeHero, ComoFunciona, Favoritas, HomeCTA, HomeFooter, HomePage)
+escreva PRIMEIRO o teste, rode e confirme FALHANDO, depois
+implemente o mínimo até ficar verde. Inclua a variant onPrimary em
+tests/ui/Button.test.tsx e o teste do fluxo de navegação em
+tests/App.test.tsx. Rode npm test ao final.
+```
+
+### 20. Integração e atualização de documentação — Home (Claude Code)
+
+Monta a Home como tela raiz e atualiza os documentos que passam a valer para 2 telas — passo
+explícito na spec que não existia no fluxo do Cardápio (tela única).
+
+```
+> integre a Home como tela raiz: App.tsx troca para
+useState<'home' | 'cardapio'> e monta HomePage por padrão, com o
+wordmark do CardapioHeader navegando de volta para a Home. Atualize
+scripts/screenshot.mjs para navegar Home → Cardápio num só comando,
+gerando design/atual-home.png e design/atual-cardapio.png. Atualize
+design/design-system.md (registrar a tela Home, a variant
+onPrimary e a navegação) e CLAUDE.md (comando de screenshot com 2
+arquivos). Critério de aceite: npm test verde e npm run dev
+mostrando a Home como tela inicial.
+```
+
+### 21. Validação de fidelidade visual — duas telas (Claude Code)
+
+Mesmo loop do prompt 15, agora cobrindo as duas telas geradas por `npm run screenshot`.
+
+```
+> valide a fidelidade visual das duas telas: rode npm run
+screenshot, compare design/atual-home.png com Home.dc.html e
+design/atual-cardapio.png com Cardapio.dc.html (via
+design/design-prompt.md) — cores, tipografia, espaçamentos e
+layout. Liste as divergências encontradas e corrija uma a uma.
+Repita até ficar fiel. Ao final: npm test verde.
 ```
 
 ### Prompts de manutenção
@@ -328,4 +461,4 @@ aplicação. Rode npm test ao final para garantir que nada quebrou.
 ```
 
 **Reimportar o design system após evolução no Claude Design:**
-reutilizar o prompt 4 com a instrução guardada na seção "Origem" de `design/design-system.md`.
+reutilizar o prompt 7 com a instrução guardada na seção "Origem" de `design/design-system.md`.
