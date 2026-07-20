@@ -1,0 +1,11 @@
+@media (max-width: 860px) {
+  .home-hero > div {
+    grid-template-columns: 1fr !important;
+  }
+  .home-hero img {
+    order: -1;
+  }
+  .home-grid-3 {
+    grid-template-columns: 1fr !important;
+  }
+}
