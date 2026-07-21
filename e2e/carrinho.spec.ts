@@ -7,7 +7,7 @@ async function irParaCardapio(page: Page) {
 }
 
 function cartaoDaPizza(page: Page, nomePizza: string) {
-  return page.locator('div').filter({ has: page.getByRole('heading', { name: nomePizza }) }).first()
+  return page.getByRole('heading', { name: nomePizza }).locator('..').locator('..')
 }
 
 test.describe('Carrinho — adicionar, quantidade, frete', () => {
@@ -22,7 +22,6 @@ test.describe('Carrinho — adicionar, quantidade, frete', () => {
 
     await cartaoDaPizza(page, 'Margherita da casa')
       .getByRole('button', { name: /Adicionar/ })
-      .first()
       .click()
 
     const painel = page.getByRole('heading', { name: 'Seu pedido' }).locator('..')
@@ -38,7 +37,6 @@ test.describe('Carrinho — adicionar, quantidade, frete', () => {
     await irParaCardapio(page)
     await cartaoDaPizza(page, 'Margherita da casa')
       .getByRole('button', { name: /Adicionar/ })
-      .first()
       .click()
 
     const aumentar = page.getByRole('button', { name: 'Aumentar quantidade' })
@@ -55,7 +53,6 @@ test.describe('Carrinho — adicionar, quantidade, frete', () => {
     await irParaCardapio(page)
     await cartaoDaPizza(page, 'Margherita da casa')
       .getByRole('button', { name: /Adicionar/ })
-      .first()
       .click()
 
     const aumentar = page.getByRole('button', { name: 'Aumentar quantidade' })
@@ -74,7 +71,6 @@ test.describe('Carrinho — adicionar, quantidade, frete', () => {
     await irParaCardapio(page)
     await cartaoDaPizza(page, 'Margherita da casa')
       .getByRole('button', { name: /Adicionar/ })
-      .first()
       .click()
 
     await page.getByTitle('Tirar do pedido').click()
