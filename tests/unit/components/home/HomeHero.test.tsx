@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { HomeHero } from '../../../src/components/home/HomeHero'
+import { HomeHero } from '../../../../src/components/home/HomeHero'
 
 describe('HomeHero', () => {
   it('renderiza o badge, o título e a nota de frete grátis', () => {

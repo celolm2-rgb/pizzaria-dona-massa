@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import { Card } from '../../src/components/ui/Card'
+import { Card } from '../../../src/components/ui/Card'
 
 describe('Card', () => {
   it('renders its children on the card surface token', () => {

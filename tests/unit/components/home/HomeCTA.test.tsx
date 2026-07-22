@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { HomeCTA } from '../../../src/components/home/HomeCTA'
+import { HomeCTA } from '../../../../src/components/home/HomeCTA'
 
 describe('HomeCTA', () => {
   it('renderiza o título e o texto do banner', () => {

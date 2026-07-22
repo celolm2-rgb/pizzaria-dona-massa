@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatarPreco } from '../../src/domain/moeda'
+import { formatarPreco } from '../../../src/domain/moeda'
 
 describe('formatarPreco', () => {
   it('formata um valor inteiro com vírgula decimal', () => {

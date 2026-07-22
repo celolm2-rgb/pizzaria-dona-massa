@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { PizzaCard } from '../../../src/components/cardapio/PizzaCard'
+import { PizzaCard } from '../../../../src/components/cardapio/PizzaCard'
 
 const pizzaComBadge = {
   id: 'calabresa',

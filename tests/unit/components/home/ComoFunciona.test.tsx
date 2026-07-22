@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { ComoFunciona } from '../../../src/components/home/ComoFunciona'
+import { ComoFunciona } from '../../../../src/components/home/ComoFunciona'
 
 describe('ComoFunciona', () => {
   it('renderiza o título e o subtítulo da seção', () => {

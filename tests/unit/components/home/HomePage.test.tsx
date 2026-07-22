@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { HomePage } from '../../../src/components/home/HomePage'
+import { HomePage } from '../../../../src/components/home/HomePage'
 
 describe('HomePage', () => {
   it('compõe todas as seções da landing', () => {

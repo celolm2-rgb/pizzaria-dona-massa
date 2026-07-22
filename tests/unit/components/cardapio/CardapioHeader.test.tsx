@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { CardapioHeader } from '../../../src/components/cardapio/CardapioHeader'
+import { CardapioHeader } from '../../../../src/components/cardapio/CardapioHeader'
 
 describe('CardapioHeader', () => {
   it('renderiza o wordmark e a tagline da marca', () => {

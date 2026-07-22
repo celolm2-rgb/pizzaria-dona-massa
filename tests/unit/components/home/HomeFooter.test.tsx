@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { HomeFooter } from '../../../src/components/home/HomeFooter'
+import { HomeFooter } from '../../../../src/components/home/HomeFooter'
 
 describe('HomeFooter', () => {
   it('renderiza o nome da marca e o horário/endereço', () => {

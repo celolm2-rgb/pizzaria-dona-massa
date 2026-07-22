@@ -28,6 +28,6 @@ design/atual-cardapio.png
 *.sw?
 
 # Artefatos do Playwright (npm run test:e2e)
-/test-results/
+/tests/e2e-results/
 /playwright-report/
 /blob-report/

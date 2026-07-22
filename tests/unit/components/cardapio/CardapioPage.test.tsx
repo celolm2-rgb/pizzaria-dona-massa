@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
-import { CardapioPage } from '../../../src/components/cardapio/CardapioPage'
+import { CardapioPage } from '../../../../src/components/cardapio/CardapioPage'
 
 describe('CardapioPage — integração listagem + carrinho', () => {
   it('adicionar uma pizza G ao carrinho atualiza o total e o aviso de frete grátis', async () => {

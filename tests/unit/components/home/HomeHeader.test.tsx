@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { HomeHeader } from '../../../src/components/home/HomeHeader'
+import { HomeHeader } from '../../../../src/components/home/HomeHeader'
 
 describe('HomeHeader', () => {
   it('renderiza o wordmark da marca', () => {

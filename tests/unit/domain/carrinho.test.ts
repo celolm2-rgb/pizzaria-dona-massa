@@ -8,7 +8,7 @@ import {
   calcularTotal,
   ehFreteGratis,
   removerItem,
-} from '../../src/domain/carrinho'
+} from '../../../src/domain/carrinho'
 
 const item = (key: string, preco: number, qty: number) => ({
   key,

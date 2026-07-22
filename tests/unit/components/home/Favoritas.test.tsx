@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { Favoritas } from '../../../src/components/home/Favoritas'
+import { Favoritas } from '../../../../src/components/home/Favoritas'
 
 describe('Favoritas', () => {
   it('renderiza o título e o subtítulo da seção', () => {

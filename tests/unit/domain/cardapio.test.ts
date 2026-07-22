@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { listarTamanhosComPreco, PIZZAS, precoPorTamanho } from '../../src/domain/cardapio'
+import { listarTamanhosComPreco, PIZZAS, precoPorTamanho } from '../../../src/domain/cardapio'
 
 describe('precoPorTamanho', () => {
   it('P sem extra de sabor (Margherita) → R$35', () => {
