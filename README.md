@@ -11,16 +11,51 @@ React + TypeScript + Vite, seguindo fielmente um design system importado do Clau
 - Oxlint para lint
 - Playwright para o script de screenshot de validação visual
 
-## Comandos
+## Requisitos
 
-- `npm install` — instala as dependências
-- `npm run dev` — sobe o servidor de desenvolvimento
-- `npm test` — roda a suíte de testes (Vitest)
-- `npm run test:watch` — roda os testes em modo watch
-- `npm run build` — build de produção (`tsc -b && vite build`)
-- `npm run lint` — roda o Oxlint
-- `npm run screenshot` — gera `design/atual-home.png` e `design/atual-cardapio.png`
-  navegando pelas duas telas, para validação de fidelidade visual
+| Requisito | Versão mínima | Testado com | Obrigatório |
+|---|---|---|---|
+| [Node.js](https://nodejs.org) | 20.19+ / 22.13+ / 24+ | 24.18.0 LTS | Sim |
+| npm | vem com o Node | 11.16.0 | Sim |
+| Chromium do Playwright | — | 149.0.7827.55 | Só para `npm run screenshot` |
+| [Git](https://git-scm.com) | qualquer | 2.55.0 | Recomendado |
+| [GitHub CLI](https://cli.github.com) (`gh`) | qualquer | 2.96.0 | Opcional |
+
+> Versões ímpares do Node (21, 23) não são suportadas — o Vitest 4 aceita apenas
+> linhas LTS (`^20 || ^22 || >=24`).
+
+## Setup
+
+```bash
+npm install
+npx playwright install chromium   # necessário para npm run screenshot
+npm test                          # valida o ambiente: todos os testes devem passar
+```
+
+### Windows (winget)
+
+```powershell
+winget install OpenJS.NodeJS.LTS
+winget install Git.Git
+winget install GitHub.cli
+```
+
+Após instalar, **abra um novo terminal** para o PATH ser atualizado.
+
+## Scripts
+
+| Comando | O que faz |
+|---|---|
+| `npm run dev` | Dev server com HMR |
+| `npm test` | Suíte completa (Vitest, uma passada) |
+| `npm run test:watch` | Testes em modo watch |
+| `npm run lint` | Oxlint |
+| `npm run build` | Type-check (`tsc -b`) + build de produção |
+| `npm run preview` | Serve o build de produção |
+| `npm run screenshot` | Gera `design/atual-home.png` e `design/atual-cardapio.png` |
+
+O `npm run screenshot` sobe o dev server internamente — não é preciso rodar
+`npm run dev` em paralelo.
 
 ## Estrutura do projeto
 
