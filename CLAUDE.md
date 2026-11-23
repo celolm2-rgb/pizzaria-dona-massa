@@ -1,5 +1,9 @@
 # Pizzaria Dona Massa
 
+Arcabouço de trabalho (ai-working-framework, instalação mínima): comece por `AI_HANDOFF.md`.
+@docs/framework/constitution-core.md
+@docs/constitution.md
+
 ## Comandos
 - Testes: `npm test`
 - Dev server: `npm run dev`

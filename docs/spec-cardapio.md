@@ -1,5 +1,11 @@
 # Spec — Tela de Cardápio (Funcionalidades 1 e 2)
 
+> **Superada em parte em 2026-10-01** por `docs/superpowers/specs/2026-10-01-cardapio-redesign-design.md`
+> (Cardápio redesenhado, projeto Claude Design `02dc2137-ef8c-4ce1-a78a-620ac1883b79`). NÃO valem mais:
+> header/tagline (L24-26), feedback "Adicionado ✓" (L36), catálogo/selos/ingredientes (L37-42), prop
+> `acabouDeAdicionar` (L69-70) e o restante do "resumo fiel" visual. Continuam valendo as regras e os
+> casos de teste de domínio (preço, carrinho, frete).
+
 ## Contexto
 
 O projeto já tem a fundação do design system (`src/styles/tokens.css`, `src/components/ui/{Button,Card,Badge}`)
@@ -23,7 +29,7 @@ pedidas, escopo fechado. Implementação virá em etapa seguinte, seguindo TDD.
 
 - **Header:** fundo `--action-primary`, padding `28px 32px`; wordmark "Pizzaria Dona Massa" (Young
   Serif, 2rem, `--text-on-primary`); tagline "Pizza artesanal de bairro, direto do nosso forno"
-  (0.9375rem, `--molho-100`).
+  (0.9375rem, `--molho-100`). (superado em 2026-10-01)
 - **Layout principal:** `max-width:1200px`, grid de 2 colunas (`minmax(0,1fr) 320px`, gap 32px).
   Coluna esquerda = grade de pizzas; coluna direita (`aside`, sticky top 24px) = "Seu pedido".
 - **Card de pizza** (usa `ui/Card` padding 0 + `ui/Badge` + `ui/Button`): foto (190px, cover, raio
@@ -33,13 +39,13 @@ pedidas, escopo fechado. Implementação virá em etapa seguinte, seguindo TDD.
   - Linha de tamanho selecionada: borda 2px `--molho-600` + anel `--molho-100`, fundo `--branco`,
     preço em `--molho-600` (Young Serif). Não selecionada: borda 1px `--border-soft`, fundo
     `--massa-50`, preço em `--text-title`.
-  - Após clicar em "Adicionar", o botão mostra "Adicionado ✓" por ~1.4s e volta ao normal.
+  - Após clicar em "Adicionar", o botão mostra "Adicionado ✓" por ~1.4s e volta ao normal. (superado em 2026-10-01)
 - **Catálogo (3 pizzas, valores exatos do arquivo — batem com a instrução do usuário):**
   | Pizza | Ingredientes | Extra | Badge |
   |---|---|---|---|
-  | Margherita da casa | Molho de tomate, muçarela, tomate fresco e manjericão da horta | +R$0 | `success` "Vegetariana" |
-  | Calabresa da Dona | Molho de tomate, muçarela, calabresa fatiada e orégano | +R$5 | `highlight` "Mais pedida" |
-  | Quatro queijos | Muçarela, provolone, parmesão e gorgonzola sobre molho de tomate | +R$10 | nenhum |
+  | Margherita da casa | Molho de tomate, muçarela, tomate fresco e manjericão da horta | +R$0 | `success` "Vegetariana" (superado em 2026-10-01) |
+  | Calabresa da Dona | Molho de tomate, muçarela, calabresa fatiada e orégano | +R$5 | `highlight` "Mais pedida" (superado em 2026-10-01) |
+  | Quatro queijos | Muçarela, provolone, parmesão e gorgonzola sobre molho de tomate | +R$10 | nenhum (superado em 2026-10-01) |
 - **Tamanhos:** P = R$35 (4 fatias), M = R$45 (6 fatias), G = R$55 (8 fatias). Tamanho padrão: M.
 - **"Seu pedido" (aside):** vazio → "Seu pedido está vazio — escolha uma pizza ao lado que a gente
   já acende o forno." Com itens → lista de linhas (nome, "Tamanho X · R$Y cada", controles −/qty/+,
@@ -69,7 +75,7 @@ pedidas, escopo fechado. Implementação virá em etapa seguinte, seguindo TDD.
 - `PizzaCard.tsx` — controlado: props `pizza`, `tamanhoSelecionado`, `onSelecionarTamanho`,
   `onAdicionar`, `acabouDeAdicionar` (bool, para o "Adicionado ✓"). Usa `ui/Card`, `ui/Badge`,
   `ui/Button`. Não calcula preço — recebe os tamanhos já com preço formatado (via `cardapio.ts` +
-  `moeda.ts`) por quem o renderiza.
+  `moeda.ts`) por quem o renderiza. (superado em 2026-10-01)
 - `PizzaGrid.tsx` (ou `NossasPizzas.tsx`) — título "Nossas pizzas" + subtítulo + grid
   `repeat(auto-fit,minmax(300px,1fr))`; mantém o estado local de tamanho selecionado por pizza
   (dicionário `{ [pizzaId]: tamanho }`, default `'M'`) e chama `precoPorTamanho`/`listarTamanhosComPreco`
@@ -122,7 +128,7 @@ Funções puras:
 - `CardapioPage.tsx` — compõe header + `PizzaGrid` + `CartPanel`; dono do estado de carrinho
   (`useState`) e do estado de tamanho selecionado por pizza; toda vez que algo muda, recalcula via
   as funções puras de `carrinho.ts`/`cardapio.ts` e repassa os valores prontos para os componentes.
-  É aqui que o `onAdicionar` do `PizzaGrid`/`PizzaCard` passa a chamar `adicionarItem` de verdade.
+  É aqui que o `onAdicionar` do `PizzaGrid`/`PizzaCard` passa a chamar `adicionarItem` de verdade. (superado em 2026-10-02: o carrinho mora no App.tsx e sobrevive à ida e volta Home ↔ Cardápio; o CardapioPage recebe carrinho/onCarrinhoChange/onFinalizar — docs/superpowers/specs/2026-10-02-checkout-cpf-design.md, P-6)
 
 ### Casos de teste do domínio (Funcionalidade 2)
 

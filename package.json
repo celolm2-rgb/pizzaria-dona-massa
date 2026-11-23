@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "screenshot": "node scripts/screenshot.mjs",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "gate": "npm test && npm run lint && npx tsc -b && npm run test:e2e"
   },
   "dependencies": {
     "react": "^19.2.7",

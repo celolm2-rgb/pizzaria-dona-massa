@@ -27,25 +27,31 @@ Implementado localmente (fundação):
 **Fora do escopo** (não implementado — por instrução explícita, esta importação é só a fundação):
 - `guidelines/*.html` — cards de especificação visual (cores, tipo, espaçamento, marca, tom).
 
-## Tela de Cardápio (implementada a partir de outro projeto Claude Design)
+## Tela de Cardápio (redesenho de 2026-10-01)
 
-A tela de cardápio veio de um projeto separado no Claude Design ("Tela de Cardápio de Pizzas",
-`6036dccf-e261-4ed4-a41b-e1751a2451cf`, arquivo `Cardapio.dc.html`) — origem e instrução de import
-completa em `design/design-prompt.md`; spec de implementação em `docs/spec-cardapio.md`.
+A tela de cardápio vem do `Cardapio.dc.html` do projeto Claude Design
+`02dc2137-ef8c-4ce1-a78a-620ac1883b79` (redesenho), que substituiu a versão do projeto
+`6036dccf-e261-4ed4-a41b-e1751a2451cf`. Spec: `docs/superpowers/specs/2026-10-01-cardapio-redesign-design.md`
+(`docs/spec-cardapio.md` segue valendo só para o domínio de preço/carrinho/frete).
 
-- **Funcionalidade 1 (listagem)** implementada: `CardapioHeader`, `PizzaGrid`, `PizzaCard`
-  (`src/components/cardapio/`), sobre `src/domain/cardapio.ts` e `src/domain/moeda.ts`. Fotos das
-  3 pizzas trazidas do projeto de origem (`uploads/*.jpg`) para `src/assets/pizzas/`.
-- **Funcionalidade 2 (montagem do pedido/carrinho)** ainda não implementada — `CartPanel` e a
-  composição de 2 colunas do `<main>` ficam para essa etapa.
-- **Simplificações assumidas** (knobs do editor do Claude Design, não requisito de produto):
-  fotos sempre visíveis (sem toggle `mostrarFotos`); tamanho padrão fixo em `M` (sem prop
-  `tamanhoPadrao` configurável).
-- **Fidelidade visual:** a maioria dos valores do `Cardapio.dc.html` já são tokens (`var(--...)`);
-  alguns são valores fixos deliberados do próprio arquivo de origem, fora da escala padrão de
-  `--fs-*`/`--sp-*` (ex.: nome da pizza em `1.375rem`, tagline/subtítulo em `0.9375rem`, padding
-  28px do header, padding 9–14px das linhas de tamanho). Foram reproduzidos literalmente — fidelidade
-  ao arquivo de origem prevalece sobre forçar encaixe na escala de tokens nesses poucos pontos.
+- Componentes: `CardapioHeader`, `CardapioPage`, `PizzaGrid`, `PizzaCard`, `CartPanel`, `CartItemRow`
+  (`src/components/cardapio/`), sobre `src/domain/{cardapio,carrinho,moeda}.ts`. Fotos em
+  `src/assets/pizzas/`.
+- Simplificações assumidas: fotos sempre visíveis; tamanho padrão fixo em `M`; nada persiste (o
+  `localStorage` do protótipo foi cortado); o botão "Finalizar pedido" leva ao checkout (feature 2, spec docs/superpowers/specs/2026-10-02-checkout-cpf-design.md).
+- Fidelidade visual: os valores sem token do mockup (pílula `10px 16px`, stepper 28px, foto 180px,
+  colunas 340px/`minmax(300px,1fr)`, gap 2px, anel 3px, max-width 1200px/52ch, min-width 14px) foram
+  reproduzidos literalmente, confirmado pelo PO em 2026-10-01. Botões pílula e "tirar" usam só
+  `font-family` (line-height normal do navegador), como no mockup.
+
+## Tela de Checkout ("Finalizar pedido", 2026-10-02)
+
+Vem de `Checkout.dc.html` e `Input.dc.html` do projeto `02dc2137-ef8c-4ce1-a78a-620ac1883b79`. Spec:
+`docs/superpowers/specs/2026-10-02-checkout-cpf-design.md`. Componentes em `src/components/checkout/`
+(`CheckoutPage`, `FormularioCliente`, `ResumoPedido`, `ItemResumo`, `PedidoConfirmado`) e
+`src/components/pedido/TotaisPedido.tsx` (compartilhado com o Cardápio), sobre
+`src/domain/{cliente,pedido}.ts`. Reusa o `CardapioHeader`. Nada persiste; o CPF só aparece
+mascarado depois de digitado.
 
 ## Fora do escopo (cardápio)
 - `ui_kits/cardapio/` (Carrinho, MontagemPizza do design system original,
@@ -58,7 +64,7 @@ Veio do mesmo projeto Claude Design do Cardápio (`6036dccf-e261-4ed4-a41b-e1751
 em `docs/spec-home.md`. Componentes em `src/components/home/` (`HomeHeader`, `HomeHero`,
 `ComoFunciona`, `Favoritas`, `HomeCTA`, `HomeFooter`, `HomePage`).
 
-- **Navegação:** sem router — `App.tsx` guarda `useState<'home' | 'cardapio'>('home')`; a Home é a
+- **Navegação:** sem router — `App.tsx` guarda `useState<'home' | 'cardapio' | 'checkout' | 'confirmacao'>('home')` e o carrinho (memória); a Home é a
   tela raiz e todo CTA que no `.dc.html` apontava para `Cardapio.dc.html` vira `onClick` que troca
   esse estado. O wordmark "Pizzaria Dona Massa" do `CardapioHeader` também virou clicável
   (`onNavigateToHome`), voltando para a Home — convenção comum de "logo leva para o início", não
@@ -130,8 +136,9 @@ em `docs/spec-home.md`. Componentes em `src/components/home/` (`HomeHeader`, `Ho
   `selected` aplica borda 2px vermelho-molho + anel.
 - **`Badge`** — selo em pílula, caixa alta. `tone`: `neutral` \| `success` \| `highlight` \|
   `danger` (vegetariana/disponível, mais pedida/novidade, esgotada, informativo).
+- **`Input`** — campo de formulário (`kind` `text` | `checkbox`): rótulo → campo → ajuda ou erro; estados padrão, hover, foco, erro, desabilitado. Origem `Input.dc.html` (02dc2137).
 
-Inventário fechado pelo briefing de origem (Button, Card, Badge) — sem adições locais.
+Inventário: Button, Card, Badge (briefing de origem) + Input (2026-10-02, Input.dc.html).
 
 ## Reimportação
 

@@ -7,7 +7,7 @@ describe('CardapioHeader', () => {
   it('renderiza o wordmark e a tagline da marca', () => {
     render(<CardapioHeader onNavigateToHome={() => {}} />)
     expect(screen.getByText('Pizzaria Dona Massa')).toBeInTheDocument()
-    expect(screen.getByText('Pizza artesanal de bairro, direto do nosso forno')).toBeInTheDocument()
+    expect(screen.getByText('Aberto hoje até 23h · entrega em uns 40 minutos')).toBeInTheDocument()
   })
 
   it('chama onNavigateToHome ao clicar no título da marca', async () => {

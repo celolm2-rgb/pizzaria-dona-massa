@@ -1,4 +1,6 @@
+import { Button } from '../ui/Button'
 import { Card } from '../ui/Card'
+import { TotaisPedido } from '../pedido/TotaisPedido'
 import { CartItemRow, type CartItemRowProps } from './CartItemRow'
 
 export interface CartPanelItem extends Omit<CartItemRowProps, 'onIncrementar' | 'onDecrementar' | 'onRemover'> {
@@ -7,149 +9,133 @@ export interface CartPanelItem extends Omit<CartItemRowProps, 'onIncrementar' | 
 
 export interface CartPanelProps {
   itens: CartPanelItem[]
+  quantidadePizzas: number
   subtotalFormatado: string
   freteFormatado: string
   freteGratis: boolean
   totalFormatado: string
   faltaParaFreteGratisFormatado: string
-  mostraAviso: boolean
-  mostraGratis: boolean
   onIncrementar: (chave: string) => void
   onDecrementar: (chave: string) => void
   onRemover: (chave: string) => void
+  onFinalizar: () => void
+}
+
+function textoDoResumo(quantidadePizzas: number): string {
+  if (quantidadePizzas === 0) return 'Nenhuma pizza ainda'
+  if (quantidadePizzas === 1) return '1 pizza no carrinho'
+  return `${quantidadePizzas} pizzas no carrinho`
 }
 
 export function CartPanel({
   itens,
+  quantidadePizzas,
   subtotalFormatado,
   freteFormatado,
   freteGratis,
   totalFormatado,
   faltaParaFreteGratisFormatado,
-  mostraAviso,
-  mostraGratis,
   onIncrementar,
   onDecrementar,
   onRemover,
+  onFinalizar,
 }: CartPanelProps) {
   const carrinhoVazio = itens.length === 0
 
   return (
-    <Card padding="24px">
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
+    <Card padding="var(--sp-6)" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-5)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-1)' }}>
         <h2
           style={{
             margin: 0,
             fontFamily: 'var(--font-display)',
-            fontWeight: 400,
+            fontWeight: 'var(--fw-regular)',
             fontSize: 'var(--fs-heading)',
+            lineHeight: 'var(--lh-title)',
             color: 'var(--text-title)',
           }}
         >
           Seu pedido
         </h2>
+        <span style={{ fontSize: 'var(--fs-small)', color: 'var(--text-muted)' }}>
+          {textoDoResumo(quantidadePizzas)}
+        </span>
+      </div>
 
-        {carrinhoVazio && (
-          <p
+      {carrinhoVazio && (
+        <p
+          style={{
+            margin: 0,
+            padding: 'var(--sp-6) 0',
+            fontSize: 'var(--fs-small)',
+            lineHeight: 'var(--lh-body)',
+            color: 'var(--text-muted)',
+            textAlign: 'center',
+            textWrap: 'pretty',
+          }}
+        >
+          Seu carrinho ainda está vazio. Escolha um sabor e a gente já acende o forno.
+        </p>
+      )}
+
+      {!carrinhoVazio && (
+        <>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)' }}>
+            {itens.map((item) => (
+              <CartItemRow
+                key={item.key}
+                nome={item.nome}
+                tam={item.tam}
+                fatias={item.fatias}
+                qty={item.qty}
+                precoUnitFormatado={item.precoUnitFormatado}
+                precoTotalFormatado={item.precoTotalFormatado}
+                onIncrementar={() => onIncrementar(item.key)}
+                onDecrementar={() => onDecrementar(item.key)}
+                onRemover={() => onRemover(item.key)}
+              />
+            ))}
+          </div>
+
+          <TotaisPedido
+            subtotalFormatado={subtotalFormatado}
+            freteFormatado={freteFormatado}
+            freteGratis={freteGratis}
+            totalFormatado={totalFormatado}
+          />
+
+          <div
             style={{
-              margin: 0,
+              fontFamily: 'var(--font-body)',
               fontSize: 'var(--fs-small)',
-              lineHeight: 1.5,
-              color: 'var(--text-muted)',
+              lineHeight: 'var(--lh-body)',
+              padding: 'var(--sp-3) var(--sp-4)',
+              borderRadius: 'var(--radius-md)',
               textWrap: 'pretty',
+              background: freteGratis ? 'var(--accent-success-bg)' : 'var(--accent-highlight-bg)',
+              color: freteGratis ? 'var(--manjericao-700)' : 'var(--crosta-600)',
             }}
           >
-            Seu pedido está vazio — escolha uma pizza ao lado que a gente já acende o forno.
-          </p>
-        )}
+            {freteGratis
+              ? 'Frete grátis liberado! A entrega é por nossa conta.'
+              : `Faltam ${faltaParaFreteGratisFormatado} para frete grátis`}
+          </div>
 
-        {!carrinhoVazio && (
-          <>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)' }}>
-              {itens.map((item) => (
-                <CartItemRow
-                  key={item.key}
-                  nome={item.nome}
-                  tam={item.tam}
-                  qty={item.qty}
-                  precoUnitFormatado={item.precoUnitFormatado}
-                  precoTotalFormatado={item.precoTotalFormatado}
-                  onIncrementar={() => onIncrementar(item.key)}
-                  onDecrementar={() => onDecrementar(item.key)}
-                  onRemover={() => onRemover(item.key)}
-                />
-              ))}
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-2)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--fs-small)', color: 'var(--text-body)' }}>
-                <span>Subtotal</span>
-                <span>{subtotalFormatado}</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--fs-small)', color: 'var(--text-body)' }}>
-                <span>Frete</span>
-                <span style={freteGratis ? { color: 'var(--accent-success)', fontWeight: 'var(--fw-bold)' } : undefined}>
-                  {freteFormatado}
-                </span>
-              </div>
-
-              {mostraAviso && (
-                <div
-                  style={{
-                    background: 'var(--accent-highlight-bg)',
-                    color: 'var(--carvao-700)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: '10px 12px',
-                    fontSize: '0.8125rem',
-                    lineHeight: 1.4,
-                    textWrap: 'pretty',
-                  }}
-                >
-                  Faltam <strong>{faltaParaFreteGratisFormatado}</strong> para o frete grátis
-                </div>
-              )}
-
-              {mostraGratis && (
-                <div
-                  style={{
-                    background: 'var(--accent-success-bg)',
-                    color: 'var(--manjericao-700)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: '10px 12px',
-                    fontSize: '0.8125rem',
-                    lineHeight: 1.4,
-                  }}
-                >
-                  Você ganhou frete grátis ✓
-                </div>
-              )}
-
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'baseline',
-                  borderTop: '1px solid var(--massa-300)',
-                  paddingTop: '10px',
-                  marginTop: '2px',
-                }}
-              >
-                <span style={{ fontWeight: 'var(--fw-bold)', color: 'var(--text-title)' }}>Total</span>
-                <span
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    fontWeight: 400,
-                    fontSize: 'var(--fs-heading)',
-                    color: 'var(--molho-600)',
-                  }}
-                >
-                  {totalFormatado}
-                </span>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
+          <Button variant="primary" size="md" fullWidth onClick={onFinalizar}>
+            Finalizar pedido
+          </Button>
+          <span
+            style={{
+              fontSize: 'var(--fs-caption)',
+              lineHeight: 'var(--lh-body)',
+              color: 'var(--text-muted)',
+              textAlign: 'center',
+            }}
+          >
+            Sai do forno e chega quentinha em uns 40 minutos.
+          </span>
+        </>
+      )}
     </Card>
   )
 }

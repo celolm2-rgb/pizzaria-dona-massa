@@ -62,3 +62,11 @@ export function removerItem(carrinho: ItemCarrinho[], chave: string): ItemCarrin
 export function calcularTotal(subtotal: number, frete: number): number {
   return subtotal + frete
 }
+
+export function contarPizzas(carrinho: ItemCarrinho[]): number {
+  return carrinho.reduce((total, item) => total + item.qty, 0)
+}
+
+export function calcularTotalDoItem(item: ItemCarrinho): number {
+  return item.preco * item.qty
+}

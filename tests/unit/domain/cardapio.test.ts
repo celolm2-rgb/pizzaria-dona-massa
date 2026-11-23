@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { listarTamanhosComPreco, PIZZAS, precoPorTamanho } from '../../../src/domain/cardapio'
+import { fatiasPorTamanho, listarTamanhosComPreco, PIZZAS, precoPorTamanho } from '../../../src/domain/cardapio'
 
 describe('precoPorTamanho', () => {
   it('P sem extra de sabor (Margherita) → R$35', () => {
@@ -45,29 +45,43 @@ describe('listarTamanhosComPreco', () => {
   })
 })
 
+describe('fatiasPorTamanho', () => {
+  it("P → '4 fatias'", () => {
+    expect(fatiasPorTamanho('P')).toBe('4 fatias')
+  })
+
+  it("M → '6 fatias'", () => {
+    expect(fatiasPorTamanho('M')).toBe('6 fatias')
+  })
+
+  it("G → '8 fatias'", () => {
+    expect(fatiasPorTamanho('G')).toBe('8 fatias')
+  })
+})
+
 describe('PIZZAS (catálogo)', () => {
-  it('tem exatamente 3 pizzas, fielmente extraídas do Cardapio.dc.html', () => {
+  it('tem exatamente 3 pizzas, fielmente extraídas do Cardapio.dc.html redesenhado (02dc2137)', () => {
     expect(PIZZAS).toEqual([
       {
         id: 'margherita',
         nome: 'Margherita da casa',
-        ingredientes: 'Molho de tomate, muçarela, tomate fresco e manjericão da horta',
+        ingredientes: 'Molho de tomate fresco, muçarela de búfala e manjericão colhido na hora.',
         extra: 0,
-        badge: { tone: 'success', label: 'Vegetariana' },
+        badge: { tone: 'highlight', label: 'Mais pedida' },
       },
       {
         id: 'calabresa',
         nome: 'Calabresa da Dona',
-        ingredientes: 'Molho de tomate, muçarela, calabresa fatiada e orégano',
+        ingredientes: 'Calabresa artesanal fatiada fina, cebola roxa e um toque de orégano.',
         extra: 5,
-        badge: { tone: 'highlight', label: 'Mais pedida' },
+        badge: null,
       },
       {
         id: 'quatroqueijos',
         nome: 'Quatro queijos',
-        ingredientes: 'Muçarela, provolone, parmesão e gorgonzola sobre molho de tomate',
+        ingredientes: 'Muçarela, provolone, parmesão e gorgonzola derretidos juntos.',
         extra: 10,
-        badge: null,
+        badge: { tone: 'success', label: 'Da casa' },
       },
     ])
   })
