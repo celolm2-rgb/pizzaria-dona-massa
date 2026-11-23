@@ -15,22 +15,24 @@ describe('Favoritas', () => {
 
     expect(screen.getByText('Margherita da casa')).toBeInTheDocument()
     expect(screen.getByText('A partir de R$ 35,00')).toBeInTheDocument()
-    expect(screen.getByText('Vegetariana')).toBeInTheDocument()
+    expect(screen.getByText('Mais pedida')).toBeInTheDocument()
 
     expect(screen.getByText('Calabresa da Dona')).toBeInTheDocument()
     expect(screen.getByText('A partir de R$ 40,00')).toBeInTheDocument()
-    expect(screen.getByText('Mais pedida')).toBeInTheDocument()
+    expect(
+      screen.getByText('Calabresa artesanal fatiada fina, cebola roxa e um toque de orégano.'),
+    ).toBeInTheDocument()
 
     expect(screen.getByText('Quatro queijos')).toBeInTheDocument()
     expect(screen.getByText('A partir de R$ 45,00')).toBeInTheDocument()
+    expect(screen.getByText('Da casa')).toBeInTheDocument()
   })
 
   it('não mostra badge para a pizza sem badge no catálogo', () => {
     render(<Favoritas onNavigateToCardapio={() => {}} />)
-    expect(screen.queryByText('Vegetariana')).toBeInTheDocument()
-    expect(screen.queryByText('Mais pedida')).toBeInTheDocument()
-    // Quatro queijos tem badge null no catálogo — só 2 badges devem existir no total
-    expect(screen.getAllByText(/Vegetariana|Mais pedida/)).toHaveLength(2)
+    expect(screen.queryByText('Vegetariana')).not.toBeInTheDocument()
+    // Calabresa tem badge null no catálogo — só 2 badges devem existir no total
+    expect(screen.getAllByText(/Mais pedida|Da casa/)).toHaveLength(2)
   })
 
   it('chama onNavigateToCardapio ao clicar em uma pizza favorita', async () => {

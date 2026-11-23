@@ -6,6 +6,8 @@ import {
   calcularFrete,
   calcularSubtotal,
   calcularTotal,
+  calcularTotalDoItem,
+  contarPizzas,
   ehFreteGratis,
   removerItem,
 } from '../../../src/domain/carrinho'
@@ -128,5 +130,39 @@ describe('calcularTotal', () => {
 
   it('subtotal + frete grátis', () => {
     expect(calcularTotal(150, 0)).toBe(150)
+  })
+})
+
+describe('contarPizzas', () => {
+  it('carrinho vazio → 0', () => {
+    expect(contarPizzas([])).toBe(0)
+  })
+
+  it('1 item com qty 1 → 1', () => {
+    expect(contarPizzas([item('margherita-M', 45, 1)])).toBe(1)
+  })
+
+  it('soma as quantidades, não conta linhas (mesmo sabor em 2 tamanhos conta separado)', () => {
+    expect(contarPizzas([item('margherita-M', 45, 2), item('calabresa-G', 60, 1)])).toBe(3)
+  })
+})
+
+describe('calcularTotalDoItem', () => {
+  it('qty 1 → o próprio preço', () => {
+    expect(
+      calcularTotalDoItem({ key: 'margherita-M', nome: 'Margherita da casa', tam: 'M', preco: 45, qty: 1 }),
+    ).toBe(45)
+  })
+
+  it('qty 3 → 3 vezes o preço', () => {
+    expect(
+      calcularTotalDoItem({ key: 'margherita-M', nome: 'Margherita da casa', tam: 'M', preco: 45, qty: 3 }),
+    ).toBe(135)
+  })
+
+  it('preço já com o extra do sabor (Calabresa G = 55 + 5) × 2', () => {
+    expect(
+      calcularTotalDoItem({ key: 'calabresa-G', nome: 'Calabresa da Dona', tam: 'G', preco: 60, qty: 2 }),
+    ).toBe(120)
   })
 })

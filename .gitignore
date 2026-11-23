@@ -31,3 +31,9 @@ design/atual-cardapio.png
 /tests/e2e-results/
 /playwright-report/
 /blob-report/
+
+# Rascunho de sessao (local) — nunca versionar
+docs/wip.md
+
+# Segredos / ambiente
+.env

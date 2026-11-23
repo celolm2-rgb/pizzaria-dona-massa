@@ -4,14 +4,16 @@ export interface CardapioHeaderProps {
 
 export function CardapioHeader({ onNavigateToHome }: CardapioHeaderProps) {
   return (
-    <header style={{ background: 'var(--action-primary)', padding: '28px 32px' }}>
+    <header style={{ background: 'var(--action-primary)', padding: 'var(--sp-6) var(--sp-8)' }}>
       <div
         style={{
-          maxWidth: '1120px',
+          maxWidth: '1200px',
           margin: '0 auto',
           display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--sp-1)',
+          alignItems: 'baseline',
+          justifyContent: 'space-between',
+          gap: 'var(--sp-6)',
+          flexWrap: 'wrap',
         }}
       >
         <button
@@ -23,18 +25,17 @@ export function CardapioHeader({ onNavigateToHome }: CardapioHeaderProps) {
             border: 'none',
             padding: 0,
             cursor: 'pointer',
-            alignSelf: 'flex-start',
             fontFamily: 'var(--font-display)',
-            fontWeight: 400,
-            fontSize: '2rem',
-            lineHeight: 1.1,
+            fontWeight: 'var(--fw-regular)',
+            fontSize: 'var(--fs-title)',
+            lineHeight: 'var(--lh-title)',
             color: 'var(--text-on-primary)',
           }}
         >
           Pizzaria Dona Massa
         </button>
-        <span style={{ fontSize: '0.9375rem', color: 'var(--molho-100)' }}>
-          Pizza artesanal de bairro, direto do nosso forno
+        <span style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--fs-small)', color: 'var(--molho-100)' }}>
+          Aberto hoje até 23h · entrega em uns 40 minutos
         </span>
       </div>
     </header>

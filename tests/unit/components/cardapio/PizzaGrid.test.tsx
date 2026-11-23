@@ -1,23 +1,9 @@
-import { act, render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { PizzaGrid } from '../../../../src/components/cardapio/PizzaGrid'
 
 describe('PizzaGrid', () => {
-  beforeEach(() => {
-    vi.useFakeTimers({ shouldAdvanceTime: true })
-  })
-
-  afterEach(() => {
-    vi.useRealTimers()
-  })
-
-  it('renderiza o título e o subtítulo da seção', () => {
-    render(<PizzaGrid />)
-    expect(screen.getByRole('heading', { name: 'Nossas pizzas' })).toBeInTheDocument()
-    expect(screen.getByText('Escolha o tamanho e adicione ao pedido')).toBeInTheDocument()
-  })
-
   it('renderiza as 3 pizzas do catálogo', () => {
     render(<PizzaGrid />)
     expect(screen.getByText('Margherita da casa')).toBeInTheDocument()
@@ -27,33 +13,32 @@ describe('PizzaGrid', () => {
 
   it('cada pizza começa com o tamanho M selecionado, com preço já somando o extra do sabor', () => {
     render(<PizzaGrid />)
-    expect(screen.getByRole('button', { name: 'Adicionar · R$ 45,00' })).toBeInTheDocument() // Margherita M (extra 0)
-    expect(screen.getByRole('button', { name: 'Adicionar · R$ 50,00' })).toBeInTheDocument() // Calabresa M (extra 5)
-    expect(screen.getByRole('button', { name: 'Adicionar · R$ 55,00' })).toBeInTheDocument() // Quatro queijos M (extra 10)
+    const resumos = screen.getAllByText('Tamanho M · 6 fatias')
+    expect(resumos).toHaveLength(3)
+    expect(within(resumos[0].parentElement!).getByText('R$ 45,00')).toBeInTheDocument() // Margherita M (extra 0)
+    expect(within(resumos[1].parentElement!).getByText('R$ 50,00')).toBeInTheDocument() // Calabresa M (extra 5)
+    expect(within(resumos[2].parentElement!).getByText('R$ 55,00')).toBeInTheDocument() // Quatro queijos M (extra 10)
   })
 
   it('selecionar um tamanho em uma pizza não afeta as outras', async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
+    const user = userEvent.setup()
     render(<PizzaGrid />)
-    const botoesP = screen.getAllByRole('button', { name: /^P\s/ })
-    await user.click(botoesP[0]) // seleciona P na Margherita
+    await user.click(screen.getAllByRole('button', { name: /^P\s/ })[0]) // P na Margherita
 
-    expect(screen.getByRole('button', { name: 'Adicionar · R$ 35,00' })).toBeInTheDocument() // Margherita agora em P
-    expect(screen.getByRole('button', { name: 'Adicionar · R$ 50,00' })).toBeInTheDocument() // Calabresa continua em M
-    expect(screen.getByRole('button', { name: 'Adicionar · R$ 55,00' })).toBeInTheDocument() // Quatro queijos continua em M
+    expect(within(screen.getByText('Tamanho P · 4 fatias').parentElement!).getByText('R$ 35,00')).toBeInTheDocument()
+    const resumosM = screen.getAllByText('Tamanho M · 6 fatias')
+    expect(resumosM).toHaveLength(2)
+    expect(within(resumosM[0].parentElement!).getByText('R$ 50,00')).toBeInTheDocument() // Calabresa continua em M
+    expect(within(resumosM[1].parentElement!).getByText('R$ 55,00')).toBeInTheDocument() // Quatro queijos continua em M
   })
 
-  it('mostra "Adicionado ✓" ao clicar em Adicionar e volta ao normal depois de um tempo', async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
+  it('os botões de adicionar têm copy fixa "Adicionar" (sem preço, sem "Adicionado ✓")', async () => {
+    const user = userEvent.setup()
     render(<PizzaGrid />)
-    await user.click(screen.getByRole('button', { name: 'Adicionar · R$ 45,00' }))
-
-    expect(screen.getByRole('button', { name: 'Adicionado ✓' })).toBeInTheDocument()
-
-    act(() => {
-      vi.advanceTimersByTime(1500)
-    })
-
-    expect(screen.getByRole('button', { name: 'Adicionar · R$ 45,00' })).toBeInTheDocument()
+    const botoes = screen.getAllByRole('button', { name: 'Adicionar' })
+    expect(botoes).toHaveLength(3)
+    await user.click(botoes[0])
+    expect(screen.getAllByRole('button', { name: 'Adicionar' })).toHaveLength(3)
+    expect(screen.queryByText('Adicionado ✓')).not.toBeInTheDocument()
   })
 })

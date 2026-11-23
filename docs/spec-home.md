@@ -12,7 +12,7 @@ Decisões de arquitetura já validadas com o usuário (ver conversa de brainstor
 
 1. **Navegação:** estado local em `App.tsx` (`useState<'home' | 'cardapio'>('home')`), sem router.
    Home passa a ser a tela raiz. Todo link do `.dc.html` que apontava para `Cardapio.dc.html` vira
-   `onClick` que troca esse estado.
+   `onClick` que troca esse estado. (estendido em 2026-10-02 com 'checkout' | 'confirmacao'; ver docs/superpowers/specs/2026-10-02-checkout-cpf-design.md)
 2. **Button:** nova variant `onPrimary` (fundo `--branco`, texto `--action-primary`, sem sombra)
    reproduz o override `dc-props` usado nos 3 botões do Home sobre fundo vermelho — mesma API do
    `ui/Button`, sem componente novo.
@@ -63,8 +63,7 @@ Copy de conteúdo específica da Home, sem cálculo — fica como const local em
 
 ### Conteúdo — "Favoritas da casa"
 
-As 3 pizzas do Home.dc.html são exatamente as 3 pizzas de `PIZZAS` (`src/domain/cardapio.ts`), na
-mesma ordem, com o mesmo nome/ingredientes/badge. O preço exibido ("A partir de R$ X,00") bate com
+As 3 pizzas de "Favoritas da casa" vêm de `PIZZAS` (`src/domain/cardapio.ts`), na mesma ordem e com o mesmo nome do Home.dc.html. Desde 2026-10-01, selos e ingredientes seguem o catálogo do Cardápio redesenhado e divergem do Home.dc.html por decisão do PO (P-1 → A, `docs/superpowers/specs/2026-10-01-cardapio-redesign-design.md`). O preço exibido ("A partir de R$ X,00") bate com
 `precoPorTamanho('P', pizza.extra)` formatado por `formatarPreco`:
 
 | Pizza | extra | Preço P | "A partir de" |

@@ -7,7 +7,7 @@ const HOME_OUTPUT_PATH = path.resolve('design/atual-home.png')
 const CARDAPIO_OUTPUT_PATH = path.resolve('design/atual-cardapio.png')
 
 async function main() {
-  const server = await createServer({ server: { port: 5183, strictPort: true } })
+  const server = await createServer({ server: { port: 3101, strictPort: true } })
   await server.listen()
   const url = server.resolvedUrls.local[0]
 
